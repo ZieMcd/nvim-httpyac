@@ -69,23 +69,30 @@ local function removeEnv(opts)
 end
 
 function GetEnvsFiles()
-	local obj = vim.system({
+	local result = {}
+
+	local envFolder = vim.system({
 		"fd",
-		"'.env$'",
-		"-d",
-		"1",
-		"&&",
-		"fd",
-		"'.env$'",
+		".env",
 		"--search-path",
 		"env",
-		"&&",
-		"fd",
-		"'.env$'",
-		"--search-path",
-		"HubSpot",
 	}, { text = true }):wait()
-	return vim.split(obj.stdout, "\n")
+
+	local envRoot = vim.system({
+		"fd",
+		".env",
+		"-d",
+		"1",
+	}, { text = true }):wait()
+
+	for _, envF in ipairs(vim.split(envFolder.stdout, "\n")) do
+		table.insert(result, envF)
+	end
+	for _, envR in ipairs(vim.split(envRoot.stdout, "\n")) do
+		table.insert(result, envR)
+	end
+
+	return result
 end
 
 return telescope.register_extension({
