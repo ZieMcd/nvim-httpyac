@@ -68,6 +68,17 @@ local function removeEnv(opts)
 		:find()
 end
 
+function GetEnvName(env)
+	local last_slash_pos = env:match(".*/()")
+	if last_slash_pos then
+		local file = string.sub(env, last_slash_pos)
+		local envName = file:gsub("%.env$", "")
+		if envName then
+			return envName
+		end
+	end
+end
+
 function GetEnvsFiles()
 	local result = {}
 
@@ -86,10 +97,14 @@ function GetEnvsFiles()
 	}, { text = true }):wait()
 
 	for _, envF in ipairs(vim.split(envFolder.stdout, "\n")) do
-		table.insert(result, envF)
+		if GetEnvName(envF) then
+			table.insert(result, GetEnvName(envF))
+		end
 	end
 	for _, envR in ipairs(vim.split(envRoot.stdout, "\n")) do
-		table.insert(result, envR)
+		if GetEnvName(envR) then
+			table.insert(result, GetEnvName(envR))
+		end
 	end
 
 	return result
