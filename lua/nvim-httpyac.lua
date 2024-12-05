@@ -60,7 +60,7 @@ end
 M.addEnv = function(env)
 	for _, e in pairs(httpyacEnvs) do
 		if e == env then
-			vim.api.nvim_err_writeln("env" .. env .. "already added")
+			vim.api.nvim_err_writeln("env " .. env .. " already added")
 			return
 		end
 	end
@@ -74,7 +74,13 @@ M.removeEnv = function(env)
 			return
 		end
 	end
-	vim.api.nvim_err_writeln("env" .. env .. "not found")
+	vim.api.nvim_err_writeln("env " .. env .. " not found")
+end
+
+M.removeAllEnv = function()
+	for i, _ in pairs(httpyacEnvs) do
+		table.remove(httpyacEnvs, i)
+	end
 end
 
 M.httpyacEnvs = httpyacEnvs
