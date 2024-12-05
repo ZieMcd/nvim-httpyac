@@ -46,13 +46,10 @@ M.send = function()
 	}):wait()
 
 	local line = 0
-
-	api.nvim_buf_set_lines(buf, line, -1, false, { obj.stdout })
-
-	-- for s in obj.stdout:gmatch("[^\r\n]+") do
-	-- 	api.nvim_buf_set_lines(buf, line, -1, false, { s })
-	-- 	line = line + 1
-	-- end
+	for s in obj.stdout:gmatch("[^\r\n]+") do
+		api.nvim_buf_set_lines(buf, line, -1, false, { s })
+		line = line + 1
+	end
 	for s in obj.stderr:gmatch("[^\r\n]+") do
 		api.nvim_buf_set_lines(buf, line, -1, false, { s })
 		line = line + 1
